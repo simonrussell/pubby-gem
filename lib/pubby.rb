@@ -16,7 +16,9 @@ module Pubby
               raise "unknown type #{type.inspect}"
             end
             
-    klass.from_config(config)
+    result = klass.from_config(config)
+    result = Pubby::SimpleAsync.new(result) if config['async']
+    result
   end
 
 end
