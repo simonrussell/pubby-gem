@@ -26,6 +26,14 @@ describe Pubby::Stub do
     
   end
 
+  describe "::from_config" do
+    
+    it "should return a new stub" do
+      Pubby::Stub.from_config({}).should be_a(Pubby::Stub)
+    end
+    
+  end
+
   describe "#publish" do
   
     subject { Pubby::Stub.new }

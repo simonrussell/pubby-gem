@@ -25,5 +25,9 @@ class Pubby::Stub
   def empty?
     @messages.empty? || @messages.all? { |k, v| v.empty? }
   end
+  
+  def self.from_config(config)
+    new
+  end
 
 end
