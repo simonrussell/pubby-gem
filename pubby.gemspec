@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name = 'pubby'
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.summary = 'Wrappers for various channel publishing APIs'
   s.description = <<-EOS
                     Wrappers for various channel publishing APIs; trying to keep the API simple and consistent.
