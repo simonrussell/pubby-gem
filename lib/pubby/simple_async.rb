@@ -17,6 +17,7 @@ class Pubby::SimpleAsync
   
   def publish(channel, message)
     @queue << [channel, message]
+    true
   end
   
   def shutdown!

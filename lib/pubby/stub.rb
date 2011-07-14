@@ -12,6 +12,7 @@ class Pubby::Stub
 
   def publish(channel_name, message)
     @messages[channel_name] << message
+    true
   end
   
   def messages
