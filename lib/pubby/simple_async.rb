@@ -36,7 +36,7 @@ class Pubby::SimpleAsync
   def start_threads!
     @thread_count.times do
       @threads << Thread.new do
-        Thread.abort_on_exception = true
+        Thread.abort_on_exception = false
         process_messages!
       end
     end
