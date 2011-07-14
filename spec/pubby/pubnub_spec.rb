@@ -36,8 +36,9 @@ describe Pubby::Pubnub do
         
       {
         'publish_key' => 'abc',
+        'subscribe_key' => 'def'
       } => 
-        ['abc', '', '', false]
+        ['abc', 'def', '', false]
     }.each do |config, (publish_key, subscribe_key, secret_key, ssl_on)|
   
       it "should create a pubnub object with the right settings from #{config.inspect}" do
@@ -48,19 +49,23 @@ describe Pubby::Pubnub do
     end
     
     it "should require publish_key" do
-      lambda { Pubby::Pubnub.from_config({}) }.should raise_error("publish_key is required")
+      lambda { Pubby::Pubnub.from_config({'subscribe_key' => 'abc'}) }.should raise_error("publish_key is required")
     end
     
+    it "should require subscribe_key" do
+      lambda { Pubby::Pubnub.from_config({'publish_key' => 'abc'}) }.should raise_error("subscribe_key is required")
+    end
+
     describe "return value" do
       
       it "should be a Pubby::Pubsub" do
-        Pubby::Pubnub.from_config({'publish_key' => 'demo'}).should be_a(Pubby::Pubnub)
+        Pubby::Pubnub.from_config({'publish_key' => 'demo', 'subscribe_key' => 'demo'}).should be_a(Pubby::Pubnub)
       end
     
       it "should have the correct Pubnub" do
         pubnub = stub
         Pubnub.stub!(:new => pubnub)
-        Pubby::Pubnub.from_config({'publish_key' => 'demo'}).pubnub.should == pubnub
+        Pubby::Pubnub.from_config({'publish_key' => 'demo', 'subscribe_key' => 'demo'}).pubnub.should == pubnub
       end
 
     end
