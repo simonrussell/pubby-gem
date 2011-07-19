@@ -15,9 +15,9 @@ Gem::Specification.new do |s|
 
   s.files = Dir['lib/**/*.rb'] + ['LICENSE', 'README.md']
   
-  s.add_dependency 'eventmachine', '> 0.12.10'
-  s.add_dependency 'em-http-request', '> 0.3.0'
-  s.add_dependency 'json', '> 1.5.0'
-  s.add_dependency 'escape_utils', '> 0.2.3'
+  s.add_dependency 'eventmachine', '>= 0.12.10'
+  s.add_dependency 'em-http-request', '>= 0.3.0'
+  s.add_dependency 'json', '>= 1.5.0'
+  s.add_dependency 'escape_utils', '>= 0.2.3'
   
 end
