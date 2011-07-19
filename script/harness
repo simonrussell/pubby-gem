@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'pubby'))
+
+Thread.abort_on_exception = true
+
+Pubby::PubnubAsync.start_em_reactor!
+
+pubby = Pubby::PubnubAsync.new('demo', 'demo')
+
+10.times do |i|
+  pubby.publish('asldfkjalskdjflaksdjf', "#{i} - #{Time.now.utc.to_s}")
+end
+
+Pubby::PubnubAsync.stop_em_reactor!
+

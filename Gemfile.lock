@@ -1,8 +1,15 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    addressable (2.2.6)
     autotest-standalone (4.5.5)
     diff-lcs (1.1.2)
+    em-http-request (0.3.0)
+      addressable (>= 2.0.0)
+      escape_utils
+      eventmachine (>= 0.12.9)
+    escape_utils (0.2.3)
+    eventmachine (0.12.10)
     json (1.5.3)
     pubnub-ruby (0.0.4)
       json
@@ -21,6 +28,10 @@ PLATFORMS
 
 DEPENDENCIES
   autotest-standalone
+  em-http-request
+  escape_utils
+  eventmachine
+  json
   pubnub-ruby
   rake (= 0.8.7)
   rspec (~> 2.6.0)

@@ -2,8 +2,9 @@ module Pubby
 
   autoload :Stub, File.join(File.dirname(__FILE__), 'pubby/stub')
   autoload :Pubnub, File.join(File.dirname(__FILE__), 'pubby/pubnub')
+  autoload :PubnubAsync, File.join(File.dirname(__FILE__), 'pubby/pubnub_async')
   autoload :SimpleAsync, File.join(File.dirname(__FILE__), 'pubby/simple_async')
-
+  
   def self.from_config(config)
     type = config.fetch('type') { raise "type is required" }
     
@@ -12,6 +13,8 @@ module Pubby
               Pubby::Stub
             when 'pubnub'
               Pubby::Pubnub
+            when 'pubnub-async'
+              Pubby::PubnubAsync
             else
               raise "unknown type #{type.inspect}"
             end
