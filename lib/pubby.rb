@@ -23,5 +23,19 @@ module Pubby
     result = Pubby::SimpleAsync.new(result) if config['async']
     result
   end
+  
+  def self.logger
+    @logger ||= begin
+                  require 'logger'
+                  l = Logger.new(STDERR)
+                  l.progname = name
+                  l.level = Logger::ERROR
+                  l
+                end
+  end
+  
+  def self.logger=(logger)
+    @logger = logger
+  end
 
 end

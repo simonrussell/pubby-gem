@@ -38,5 +38,26 @@ describe Pubby do
     end
         
   end
+  
+  describe "::logger" do
+  
+    before { @old_logger = Pubby.logger }
+    after { Pubby.logger = @old_logger }
+      
+    its(:logger) { should_not be_nil }
+    its(:logger) { should respond_to(:warn) }    
+  
+    it "should never be nil" do
+      Pubby.logger = nil
+      Pubby.logger.should_not be_nil
+    end
+    
+    it "should be settable" do
+      new_logger = stub
+      Pubby.logger = new_logger
+      Pubby.logger.should == new_logger
+    end
+  
+  end
 
 end

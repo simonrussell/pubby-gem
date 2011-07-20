@@ -19,6 +19,8 @@ class Pubby::PubnubAsync
     
     @secret_key = secret_key
     @ssl_on = ssl_on
+    
+    Pubby.logger.info "#{self.class.name} created for publish key: #{@publish_key.inspect}, subscribe key: #{@subscribe_key.inspect}, secret key: #{@secret_key.inspect}, base_url: #{@base_url}"
   end
 
   def publish(channel_name, message)
@@ -41,18 +43,36 @@ class Pubby::PubnubAsync
   end
   
   def self.start_em_reactor!
-    return if EM.reactor_running?
+    if EM.reactor_running?
+      Pubby.logger.warn "Not starting EM reactor, already running."
+      return
+    end
+    
+    Pubby.logger.debug "Attempting start of EM reactor."
+
     Thread.new { EM.run }
     EM.next_tick { @requests = [] }
     Thread.pass
     sleep 0.05 until EM.reactor_running?
+
+    Pubby.logger.info "Started EM reactor."
   end
   
   def self.stop_em_reactor!
-    return unless EM.reactor_running?
+    unless EM.reactor_running?
+      Pubby.logger.warn "Not stopping EM reactor, not running."
+      return
+    end
+    
+    Pubby.logger.debug "Attempting stop of EM reactor."
+
     thread = EM.reactor_thread
     EM.add_periodic_timer(0.05) { EM.stop_event_loop if @requests.empty? }
+    
+    Pubby.logger.debug "Waiting for requests to complete."
     thread.join
+    
+    Pubby.logger.info "Stopped EM reactor."    
   end
   
   def build_url(channel_name, message)
@@ -67,16 +87,38 @@ class Pubby::PubnubAsync
   def publish_in_reactor(channel_name, message)
     url = build_url(channel_name, message)
     
+    Pubby.logger.debug "Message attempt: #{channel_name.inspect} <- #{message.inspect}"
     request = EM::HttpRequest.new(url).get
     self.class.requests << request
 
     request.callback do
       self.class.requests.delete(request)
+      
+      success, error_message = parse_response(request.response)
+      
+      if success
+        Pubby.logger.debug "Message SUCCESS: #{channel_name.inspect} <- #{message.inspect}"
+      else
+        Pubby.logger.error "Message FAILURE: #{channel_name.inspect} <- #{message.inspect}: #{error_message}"
+      end      
     end
 
     request.errback do
       self.class.requests.delete(request)
+      Pubby.logger.error "Message FAILURE: #{channel_name.inspect} <- #{message.inspect}: #{request.error.inspect}"
     end
+  end
+  
+  def parse_response(response)
+    parsed = JSON.parse(response)
+    
+    if parsed.first == 1
+      true
+    else
+      [false, parsed.last]
+    end
+  rescue JSON::ParserError
+    [false, "Invalid JSON: #{response}"]
   end
 
 end
